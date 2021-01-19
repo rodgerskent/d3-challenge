@@ -1,31 +1,31 @@
 // Load data data.csv
-d3.csv("./data.csv").then(function(healthData) {
+// d3.csv("./data.csv").then(function(healthData) {
 
-    console.log(healthData);
+//     console.log(healthData);
   
-    // log a list of states
-    var state = healthData.map(data => data.state);
-    console.log("state", state);
+//     // log a list of states
+//     var state = healthData.map(data => data.state);
+//     console.log("state", state);
   
-    // Cast each metric as a number using the unary + operator
-    healthData.forEach(function(data) {
-      data.poverty = +data.poverty;
-      data.obesity = +data.obesity;
-      data.age = +data.age;
-      data.income = +data.income;
-      data.smokes = +data.smokes;
-      data.healthcare = +data.healthcare;
-      console.log("State:", data.state);
-      console.log("Poverty:", data.poverty);
-      console.log("Obesity:", data.obesity);
-      console.log("Age:", data.age);
-      console.log("Income:", data.income);
-      console.log("Somkes:", data.smokes);
-      console.log("Healthcare:", data.healthcare);
-    });
-}).catch(function(error) {
-    console.log(error);
-});
+//     // Cast each metric as a number using the unary + operator
+//     healthData.forEach(function(data) {
+//       data.poverty = +data.poverty;
+//       data.obesity = +data.obesity;
+//       data.age = +data.age;
+//       data.income = +data.income;
+//       data.smokes = +data.smokes;
+//       data.healthcare = +data.healthcare;
+//       console.log("State:", data.state);
+//       console.log("Poverty:", data.poverty);
+//       console.log("Obesity:", data.obesity);
+//       console.log("Age:", data.age);
+//       console.log("Income:", data.income);
+//       console.log("Somkes:", data.smokes);
+//       console.log("Healthcare:", data.healthcare);
+//     });
+// }).catch(function(error) {
+//     console.log(error);
+// });
 
 // Charting using the Day 3 hair metal charting script as starter code
 
@@ -106,10 +106,10 @@ function updateToolTip(chosenXAxis, circlesGroup) {
   }
 
   var toolTip = d3.tip()
-    .attr("class", "tooltip")
-    .offset([80, -60])
+    .attr("class", "d3-tip")
+    .offset([10, -10])
     .html(function(d) {
-      return (`${d.state}<br>${label} ${d[chosenXAxis]}`);
+      return (`${d.state}<br>${label} ${d[chosenXAxis]}<br>Obesity (%): ${d.obesity}`);
     });
 
   circlesGroup.call(toolTip);
@@ -184,26 +184,26 @@ d3.csv("./data.csv").then(function(healthData) {
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
     .attr("cy", d => yLinearScale(d.obesity))
     .attr("r", 20)
-    .attr("fill", "pink")
+    .attr("fill", "blue")
     .attr("opacity", ".5");
 
   // Create group for two x-axis labels
   var labelsGroup = chartGroup.append("g")
     .attr("transform", `translate(${width / 2}, ${height + 20})`);
 
-  var hairLengthLabel = labelsGroup.append("text")
+  var povertyLabel = labelsGroup.append("text")
     .attr("x", 0)
     .attr("y", 20)
     .attr("value", "poverty") // value to grab for event listener
     .classed("active", true)
     .text("Poverty (% Population)");
 
-  var albumsLabel = labelsGroup.append("text")
+  var ageLabel = labelsGroup.append("text")
     .attr("x", 0)
     .attr("y", 40)
-    .attr("value", "obesity") // value to grab for event listener
+    .attr("value", "age") // value to grab for event listener
     .classed("inactive", true)
-    .text("Obesity (% of Population");
+    .text("Age (Median)");
 
   // append y axis
   chartGroup.append("text")
@@ -212,7 +212,7 @@ d3.csv("./data.csv").then(function(healthData) {
     .attr("x", 0 - (height / 2))
     .attr("dy", "1em")
     .classed("axis-text", true)
-    .text("Age (Median)");
+    .text("Obesity (%)");
 
   // updateToolTip function above csv import
   var circlesGroup = updateToolTip(chosenXAxis, circlesGroup);
@@ -244,18 +244,18 @@ d3.csv("./data.csv").then(function(healthData) {
 
         // changes classes to change bold text
         if (chosenXAxis === "age") {
-          albumsLabel
+          ageLabel
             .classed("active", true)
             .classed("inactive", false);
-          hairLengthLabel
+          povertyLabel
             .classed("active", false)
             .classed("inactive", true);
         }
         else {
-          albumsLabel
+          ageLabel
             .classed("active", false)
             .classed("inactive", true);
-          hairLengthLabel
+          povertyLabel
             .classed("active", true)
             .classed("inactive", false);
         }
