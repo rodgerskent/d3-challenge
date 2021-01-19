@@ -102,12 +102,12 @@ function updateToolTip(chosenXAxis, circlesGroup) {
     label = "Poverty (%):";
   }
   else {
-    label = "Age:";
+    label = "Median Age:";
   }
 
   var toolTip = d3.tip()
     .attr("class", "d3-tip")
-    .offset([10, -10])
+    .offset([1000, -1000])
     .html(function(d) {
       return (`${d.state}<br>${label} ${d[chosenXAxis]}<br>Obesity (%): ${d.obesity}`);
     });
@@ -132,9 +132,11 @@ d3.csv("./data.csv").then(function(healthData) {
 
   console.log(healthData);
 
-  // log a list of states
+  // log a list of states and their two letter abbreviation
   var state = healthData.map(data => data.state);
+  var abbr = healthData.map(data => data.abbr);
   console.log("state", state);
+  console.log("state", abbr);
 
   // Cast each metric as a number using the unary + operator
   healthData.forEach(function(data) {
@@ -184,8 +186,17 @@ d3.csv("./data.csv").then(function(healthData) {
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
     .attr("cy", d => yLinearScale(d.obesity))
     .attr("r", 20)
-    .attr("fill", "blue")
-    .attr("opacity", ".5");
+    //.attr("fill", "blue")
+    .attr("class", "stateCircle")
+    //.attr("opacity", ".5")
+    //.attr("name", d.abbr)
+
+  // var stateText = chartGroup.selectAll("text")
+  //   .data(healthData)
+  //   .enter()
+  //   .append("text")
+  //   .classed("stateText")
+  //   .text(d => d.abbr)
 
   // Create group for two x-axis labels
   var labelsGroup = chartGroup.append("g")
