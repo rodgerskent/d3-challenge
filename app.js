@@ -1,34 +1,3 @@
-// Load data data.csv
-// d3.csv("./data.csv").then(function(healthData) {
-
-//     console.log(healthData);
-  
-//     // log a list of states
-//     var state = healthData.map(data => data.state);
-//     console.log("state", state);
-  
-//     // Cast each metric as a number using the unary + operator
-//     healthData.forEach(function(data) {
-//       data.poverty = +data.poverty;
-//       data.obesity = +data.obesity;
-//       data.age = +data.age;
-//       data.income = +data.income;
-//       data.smokes = +data.smokes;
-//       data.healthcare = +data.healthcare;
-//       console.log("State:", data.state);
-//       console.log("Poverty:", data.poverty);
-//       console.log("Obesity:", data.obesity);
-//       console.log("Age:", data.age);
-//       console.log("Income:", data.income);
-//       console.log("Somkes:", data.smokes);
-//       console.log("Healthcare:", data.healthcare);
-//     });
-// }).catch(function(error) {
-//     console.log(error);
-// });
-
-// Charting using the Day 3 hair metal charting script as starter code
-
 
 var svgWidth = 960;
 var svgHeight = 500;
@@ -120,7 +89,13 @@ function updateToolTip(chosenXAxis, circlesGroup) {
     // onmouseout event
     .on("mouseout", function(data, index) {
       toolTip.hide(data);
-    });
+    })
+
+    .append("text")
+    .text("CO")
+    .attr("class", "stateText")
+    // Wed 1120
+
 
   return circlesGroup;
 }
@@ -136,7 +111,7 @@ d3.csv("./data.csv").then(function(healthData) {
   var state = healthData.map(data => data.state);
   var abbr = healthData.map(data => data.abbr);
   console.log("state", state);
-  console.log("state", abbr);
+  console.log("ST", abbr);
 
   // Cast each metric as a number using the unary + operator
   healthData.forEach(function(data) {
@@ -146,13 +121,13 @@ d3.csv("./data.csv").then(function(healthData) {
     data.income = +data.income;
     data.smokes = +data.smokes;
     data.healthcare = +data.healthcare;
-    console.log("State:", data.state);
-    console.log("Poverty:", data.poverty);
-    console.log("Obesity:", data.obesity);
-    console.log("Age:", data.age);
-    console.log("Income:", data.income);
-    console.log("Somkes:", data.smokes);
-    console.log("Healthcare:", data.healthcare);
+    //console.log("State:", data.state);
+    //console.log("Poverty:", data.poverty);
+    //console.log("Obesity:", data.obesity);
+    //console.log("Age:", data.age);
+    //console.log("Income:", data.income);
+    //console.log("Smokes:", data.smokes);
+    //console.log("Healthcare:", data.healthcare);
   });
 
 
@@ -182,14 +157,29 @@ d3.csv("./data.csv").then(function(healthData) {
   var circlesGroup = chartGroup.selectAll("circle")
     .data(healthData)
     .enter()
+    //.append("text") ... kills circle
+    //.attr("class", "stateText")
     .append("circle")
+    .attr("class", "stateCircle")
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
     .attr("cy", d => yLinearScale(d.obesity))
-    .attr("r", 20)
+    .attr("r", 15)
+    //.append("text") ... kills tooltip
+    //.attr("class", "stateText")
     //.attr("fill", "blue")
-    .attr("class", "stateCircle")
+    //.append("text")
+    //.text(function(d){return d.abbr})
+    //.attr("class", function(d){return "stateCircle "+ d.abbr})
     //.attr("opacity", ".5")
     //.attr("name", d.abbr)
+    // .append("text")
+    // .text(function(d){return d.abbr})
+    // .attr("class", "stateText")
+    //circlesGroup
+    //.append("text")
+    //.text(function(d){return d.abbr})
+    //.class("stateText")
+    // Wed 1048
 
   // var stateText = chartGroup.selectAll("text")
   //   .data(healthData)
@@ -198,6 +188,28 @@ d3.csv("./data.csv").then(function(healthData) {
   //   .classed("stateText")
   //   .text(d => d.abbr)
 
+  function addLabels(){
+  var circleLabels = chartGroup.selectAll("stateText");
+  //circleLabels.exit().remove()
+  circleLabels
+  //.html("")
+  .data(healthData)
+  .enter()
+  .append("text")
+  .attr("x", function(d) {
+    return xLinearScale(d[chosenXAxis]);
+  })
+  .attr("y", function(d) {
+    return yLinearScale(d.obesity);
+  })
+  .text(function(d) {
+    return d.abbr;
+  })
+  .attr("class", "stateText")
+  circleLabels.exit().remove()
+  }
+  
+  addLabels()
   // Create group for two x-axis labels
   var labelsGroup = chartGroup.append("g")
     .attr("transform", `translate(${width / 2}, ${height + 20})`);
@@ -226,7 +238,8 @@ d3.csv("./data.csv").then(function(healthData) {
     .text("Obesity (%)");
 
   // updateToolTip function above csv import
-  var circlesGroup = updateToolTip(chosenXAxis, circlesGroup);
+  //var circlesGroup = updateToolTip(chosenXAxis, circlesGroup);
+  circlesGroup = updateToolTip(chosenXAxis, circlesGroup);
 
   // x axis labels event listener
   labelsGroup.selectAll("text")
@@ -253,6 +266,9 @@ d3.csv("./data.csv").then(function(healthData) {
         // updates tooltips with new info
         circlesGroup = updateToolTip(chosenXAxis, circlesGroup);
 
+        // update circletext 
+        //circleLabels = 
+
         // changes classes to change bold text
         if (chosenXAxis === "age") {
           ageLabel
@@ -261,6 +277,8 @@ d3.csv("./data.csv").then(function(healthData) {
           povertyLabel
             .classed("active", false)
             .classed("inactive", true);
+          d3.selectAll("stateText").remove()
+          addLabels()
         }
         else {
           ageLabel
@@ -269,6 +287,8 @@ d3.csv("./data.csv").then(function(healthData) {
           povertyLabel
             .classed("active", true)
             .classed("inactive", false);
+            d3.selectAll("stateText").remove()
+            addLabels()
         }
       }
     });
