@@ -110,8 +110,8 @@ d3.csv("./data.csv").then(function(healthData) {
   // log a list of states and their two letter abbreviation
   var state = healthData.map(data => data.state);
   var abbr = healthData.map(data => data.abbr);
-  console.log("state", state);
-  console.log("ST", abbr);
+  //console.log("state", state);
+  //console.log("ST", abbr);
 
   // Cast each metric as a number using the unary + operator
   healthData.forEach(function(data) {
@@ -157,39 +157,14 @@ d3.csv("./data.csv").then(function(healthData) {
   var circlesGroup = chartGroup.selectAll("circle")
     .data(healthData)
     .enter()
-    //.append("text") ... kills circle
-    //.attr("class", "stateText")
     .append("circle")
     .attr("class", "stateCircle")
     .attr("cx", d => xLinearScale(d[chosenXAxis]))
     .attr("cy", d => yLinearScale(d.obesity))
     .attr("r", 15)
-    //.append("text") ... kills tooltip
-    //.attr("class", "stateText")
-    //.attr("fill", "blue")
-    //.append("text")
-    //.text(function(d){return d.abbr})
-    //.attr("class", function(d){return "stateCircle "+ d.abbr})
-    //.attr("opacity", ".5")
-    //.attr("name", d.abbr)
-    // .append("text")
-    // .text(function(d){return d.abbr})
-    // .attr("class", "stateText")
-    //circlesGroup
-    //.append("text")
-    //.text(function(d){return d.abbr})
-    //.class("stateText")
-    // Wed 1048
-
-  // var stateText = chartGroup.selectAll("text")
-  //   .data(healthData)
-  //   .enter()
-  //   .append("text")
-  //   .classed("stateText")
-  //   .text(d => d.abbr)
-
+ 
   function addLabels(){
-  var circleLabels = chartGroup.selectAll("stateText");
+  var circleLabels = chartGroup.selectAll(".stateText");
   //circleLabels.exit().remove()
   circleLabels
   //.html("")
@@ -206,10 +181,11 @@ d3.csv("./data.csv").then(function(healthData) {
     return d.abbr;
   })
   .attr("class", "stateText")
-  circleLabels.exit().remove()
+  //circleLabels.exit().remove()
   }
   
   addLabels()
+
   // Create group for two x-axis labels
   var labelsGroup = chartGroup.append("g")
     .attr("transform", `translate(${width / 2}, ${height + 20})`);
@@ -277,7 +253,7 @@ d3.csv("./data.csv").then(function(healthData) {
           povertyLabel
             .classed("active", false)
             .classed("inactive", true);
-          d3.selectAll("stateText").remove()
+          d3.selectAll(".stateText").remove()
           addLabels()
         }
         else {
@@ -287,7 +263,7 @@ d3.csv("./data.csv").then(function(healthData) {
           povertyLabel
             .classed("active", true)
             .classed("inactive", false);
-            d3.selectAll("stateText").remove()
+            d3.selectAll(".stateText").remove()
             addLabels()
         }
       }
