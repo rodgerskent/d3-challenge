@@ -76,25 +76,23 @@ function updateToolTip(chosenXAxis, circlesGroup) {
 
   var toolTip = d3.tip()
     .attr("class", "d3-tip")
-    .offset([1000, -1000])
+    .offset([10, -10])
     .html(function(d) {
       return (`${d.state}<br>${label} ${d[chosenXAxis]}<br>Obesity (%): ${d.obesity}`);
     });
 
   circlesGroup.call(toolTip);
+  //svg.call(toolTip);
 
   circlesGroup.on("mouseover", function(data) {
-    toolTip.show(data);
+    toolTip.show(data, this);
   })
     // onmouseout event
     .on("mouseout", function(data, index) {
       toolTip.hide(data);
     })
 
-    .append("text")
-    .text("CO")
-    .attr("class", "stateText")
-    // Wed 1120
+    
 
 
   return circlesGroup;
